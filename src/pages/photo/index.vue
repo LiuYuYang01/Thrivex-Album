@@ -108,10 +108,26 @@ const currentPhotoIndex = ref<number | null>(null)
 const showModal = ref(false)
 // 记录图片切换方向
 const direction = ref<'left' | 'right'>('right')
+// 添加图片加载状态
+const isImageLoading = ref(false)
 
 // 打开照片查看器
-const openPhoto = (index: number) => {
+const openPhoto = async (index: number) => {
   currentPhotoIndex.value = index
+  isImageLoading.value = true
+  
+  // 预加载图片
+  const img = new Image()
+  img.src = photos[index].src
+  
+  // 等待图片加载完成
+  await new Promise((resolve) => {
+    img.onload = () => {
+      resolve(true)
+    }
+  })
+  
+  isImageLoading.value = false
   showModal.value = true
 }
 
@@ -170,6 +186,11 @@ const prevPhoto = () => {
         :exit="{ opacity: 0, scale: 0.8 }" :transition="{ duration: 0.3, ease: 'easeInOut' }"
         class="relative max-w-4xl w-full mx-4" @click.stop>
         <div class="relative rounded-2xl overflow-hidden">
+          <!-- 加载状态 -->
+          <div v-if="isImageLoading" class="absolute inset-0 flex items-center justify-center bg-black/50">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+          </div>
+          
           <!-- 当前照片动画 -->
           <Motion :key="currentPhotoIndex" :initial="{
             opacity: 0,
