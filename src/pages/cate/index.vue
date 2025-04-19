@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { Motion } from 'motion-v'
 const router = useRouter()
 
-const cates: Photo[] = [
+const cates: Cate[] = [
   {
     id: 1,
     src: 'https://images.unsplash.com/photo-1480796927426-f609979314bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
@@ -37,24 +38,26 @@ const handleClick = (name: string) => {
 <template>
   <div class="container mx-auto px-4 py-8">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div v-for="cate in cates" :key="cate.id" class="relative group overflow-hidden rounded-lg shadow-lg"
-        @click="handleClick(cate.name)">
-        <!-- 图片容器 -->
-        <div class="aspect-w-1 aspect-h-1 w-full cursor-pointer">
-          <img :src="cate.src" :alt="cate.title"
-            class="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110" />
-        </div>
+      <Motion v-for="(cate, index) in cates" :key="cate.id" :initial="{ opacity: 0, y: 20 }"
+        :animate="{ opacity: 1, y: 0 }" :transition="{ duration: 0.5, delay: index * 0.1 }">
+        <div class="relative group overflow-hidden rounded-lg shadow-lg" @click="handleClick(cate.name)">
+          <!-- 图片容器 -->
+          <div class="aspect-w-1 aspect-h-1 w-full cursor-pointer">
+            <img :src="cate.src" :alt="cate.title"
+              class="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110" />
+          </div>
 
-        <!-- 分类标签 -->
-        <div class="absolute top-4 left-4 bg-black/20 backdrop-blur-md text-white px-3 py-1 rounded-full text-sm">
-          {{ cate.name }}
-        </div>
+          <!-- 分类标签 -->
+          <div class="absolute top-4 left-4 bg-black/20 backdrop-blur-md text-white px-3 py-1 rounded-full text-sm">
+            {{ cate.name }}
+          </div>
 
-        <!-- 标题遮罩 -->
-        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-          <h3 class="text-white font-medium text-lg">{{ cate.title }}</h3>
+          <!-- 标题遮罩 -->
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+            <h3 class="text-white font-medium text-lg">{{ cate.title }}</h3>
+          </div>
         </div>
-      </div>
+      </Motion>
     </div>
   </div>
 </template>
