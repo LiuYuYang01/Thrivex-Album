@@ -11,7 +11,7 @@ const photos: Photo[] = [
     description: '日本标志性的富士山风景,白雪皑皑的山顶与蓝天相映成趣'
   },
   {
-    id: 2, 
+    id: 2,
     src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-1.2.1&auto=format&fit=crop&w=3840&q=100',
     title: '日落时分',
     description: '夕阳西下的美丽景色,金色的阳光洒在大地上'
@@ -115,18 +115,18 @@ const isImageLoading = ref(false)
 const openPhoto = async (index: number) => {
   currentPhotoIndex.value = index
   isImageLoading.value = true
-  
+
   // 预加载图片
   const img = new Image()
   img.src = photos[index].src
-  
+
   // 等待图片加载完成
   await new Promise((resolve) => {
     img.onload = () => {
       resolve(true)
     }
   })
-  
+
   isImageLoading.value = false
   showModal.value = true
 }
@@ -190,7 +190,7 @@ const prevPhoto = () => {
           <div v-if="isImageLoading" class="absolute inset-0 flex items-center justify-center bg-black/50">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
           </div>
-          
+
           <!-- 当前照片动画 -->
           <Motion :key="currentPhotoIndex" :initial="{
             opacity: 0,
@@ -206,7 +206,7 @@ const prevPhoto = () => {
             ease: 'easeInOut'
           }" class="relative">
             <img :src="photos[currentPhotoIndex].src" :alt="photos[currentPhotoIndex].title"
-              class="w-full h-auto max-h-[80vh] object-cover" />
+              class="w-full h-auto max-h-[80vh] rounded-2xl object-cover" />
 
             <!-- 左右导航按钮 -->
             <div
@@ -220,20 +220,20 @@ const prevPhoto = () => {
               @click.stop="nextPhoto">
               <box-icon name='chevron-right' color='#ffffff' size="32px" />
             </div>
-          </Motion>
 
-          <!-- 照片信息底部遮罩 -->
-          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-            <Motion :key="currentPhotoIndex" :initial="{ opacity: 0, y: 20 }" :animate="{ opacity: 1, y: 0 }"
-              :transition="{ duration: 0.3, delay: 0.2 }">
-              <h3 class="text-white text-2xl font-medium mb-2">{{ photos[currentPhotoIndex].title }}</h3>
-              <p class="text-white/50 leading-relaxed mb-3">{{ photos[currentPhotoIndex].description }}</p>
-              <div class="flex items-center space-x-2 text-gray-400">
-                <box-icon name='calendar' color='#99a1af' size="18px"></box-icon>
-                <p class="text-sm">{{ new Date().toLocaleDateString('zh-CN') }}</p>
-              </div>
-            </Motion>
-          </div>
+            <!-- 照片信息底部遮罩 -->
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+              <Motion :key="currentPhotoIndex" :initial="{ opacity: 0, y: 20 }" :animate="{ opacity: 1, y: 0 }"
+                :transition="{ duration: 0.3, delay: 0.2 }">
+                <h3 class="text-white text-2xl font-medium mb-2">{{ photos[currentPhotoIndex].title }}</h3>
+                <p class="text-white/50 leading-relaxed mb-3">{{ photos[currentPhotoIndex].description }}</p>
+                <div class="flex items-center space-x-2 text-gray-400">
+                  <box-icon name='calendar' color='#99a1af' size="18px"></box-icon>
+                  <p class="text-sm">{{ new Date().toLocaleDateString('zh-CN') }}</p>
+                </div>
+              </Motion>
+            </div>
+          </Motion>
         </div>
       </Motion>
     </div>
