@@ -7,9 +7,5 @@
 </template>
 
 <style>
-body {
-  /* background: #1a1a1a; */
-  /* 霞鹜文楷 */
-  font-family: "LXGW WenKai";
-}
+
 </style>
