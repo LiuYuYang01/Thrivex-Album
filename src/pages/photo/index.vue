@@ -157,17 +157,18 @@ const prevPhoto = () => {
 <template>
   <!-- 主容器 -->
   <div class="container mx-auto px-4 py-8">
-    <!-- 照片网格布局 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- 瀑布流布局 -->
+    <div class="masonry-grid">
       <!-- 使用Motion组件为每张照片添加动画效果 -->
       <Motion v-for="(photo, index) in photos" :key="photo.id" :initial="{ opacity: 0, y: 20 }"
-        :animate="{ opacity: 1, y: 0 }" :transition="{ duration: 0.5, delay: index * 0.1 }">
+        :animate="{ opacity: 1, y: 0 }" :transition="{ duration: 0.5, delay: index * 0.1 }"
+        class="masonry-item">
         <!-- 单个照片卡片容器 -->
-        <div class="relative group overflow-hidden rounded-lg shadow-lg" @click="openPhoto(index)">
-          <!-- 图片容器，保持1:1宽高比 -->
-          <div class="aspect-w-1 aspect-h-1 w-full cursor-pointer">
+        <div class="relative group overflow-hidden rounded-lg shadow-lg mb-6" @click="openPhoto(index)">
+          <!-- 图片容器 -->
+          <div class="w-full cursor-pointer">
             <img :src="photo.src" :alt="photo.title"
-              class="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110" />
+              class="w-full h-auto object-cover transform transition-transform duration-300 group-hover:scale-110" />
           </div>
 
           <!-- 照片标题遮罩层 -->
@@ -241,20 +242,34 @@ const prevPhoto = () => {
 </template>
 
 <style scoped>
-/* 保持1:1宽高比的样式 */
-.aspect-w-1 {
-  position: relative;
-  padding-bottom: 100%;
+/* 瀑布流布局样式 */
+.masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 1.5rem;
+  grid-auto-rows: 10px;
 }
 
-.aspect-w-1>img {
-  position: absolute;
-  height: 100%;
+.masonry-item {
+  grid-row-end: span 30;
+}
+
+.masonry-item img {
   width: 100%;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  object-fit: cover;
+  height: auto;
+  display: block;
+}
+
+/* 响应式布局调整 */
+@media (max-width: 640px) {
+  .masonry-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
 }
 </style>
